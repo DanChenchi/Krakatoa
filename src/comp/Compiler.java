@@ -124,21 +124,38 @@ public class Compiler {
 		lexer.nextToken();
 		if ( lexer.token != Symbol.IDENT )
 			signalError.show(SignalError.ident_expected);
+		
 		String className = lexer.getStringValue();
-		symbolTable.putInGlobal(className, new KraClass(className));
+		KraClass kra_class = new KraClass(className); //instancia a classe que esta sendo declarada no .KRA
+		
+		symbolTable.putInGlobal(className, kra_class);
 		lexer.nextToken();
 		if ( lexer.token == Symbol.EXTENDS ) {
 			lexer.nextToken();
 			if ( lexer.token != Symbol.IDENT )
 				signalError.show(SignalError.ident_expected);
+			
 			String superclassName = lexer.getStringValue();
-
+			KraClass super_class = symbolTable.getInGlobal(superclassName); //Verifica se a superclasse existe
+			
+			if(super_class == null )
+				signalError.show("superclass '"+superclassName+"' not found");
+			else
+				kra_class.setSuperclass(super_class);
+			
+			if(superclassName.equals(className)){ //Verifica se a superclasse não é a própria classe
+				signalError.show("Class '"+className+"' is inheriting from itself");
+				kra_class.setSuperclass(null); //Se a classe "herda" dela mesma, então não vai possuir superclasse
+			}
+			
 			lexer.nextToken();
 		}
 		if ( lexer.token != Symbol.LEFTCURBRACKET )
 			signalError.show("{ expected", true);
 		lexer.nextToken();
 
+		//Verificar a presença do token 'static' antes dos tokens ('private' | 'public')
+			
 		while (lexer.token == Symbol.PRIVATE || lexer.token == Symbol.PUBLIC) {
 
 			Symbol qualifier;
@@ -167,6 +184,10 @@ public class Compiler {
 			else
 				instanceVarDec(t, name);
 		}
+		
+		//TODO: ER-SEM77.KRA, ER-SEM78.KRA, ER-SEM79.KRA, ER-SEM80.KRA, ER-SEM81.KRA
+		//Verificar se existe uma classe Program, e se essa possui um método public void run()
+		
 		if ( lexer.token != Symbol.RIGHTCURBRACKET )
 			signalError.show("public/private or \"}\" expected");
 		lexer.nextToken();
@@ -193,9 +214,22 @@ public class Compiler {
 		 * MethodDec ::= Qualifier Return Id "("[ FormalParamDec ] ")" "{"
 		 *                StatementList "}"
 		 */
+		
+		
+		//TODO: ER-SEM31.KRA
+		//Verificar se o nome do método não é o mesmo de uma variável de instância
+		
+		//TODO: ER-SEM32.KRA, ER-SEM33.KRA, ER-SEM70.KRA
+		//Verificar se o método não está sendo redeclarado, isso inclui declarar o mesmo método como private e public
+		
 
 		lexer.nextToken();
 		if ( lexer.token != Symbol.RIGHTPAR ) formalParamDec();
+		
+		//TODO: ER-SEM30.KRA, ER-SEM51.KRA
+		//métodos herdados precisam ter a mesma assinatura do método da classe pai. Isso inclui os tipos dos parâmetros
+		//A{ public void put();}    B extends A {public int put(char c);}
+		
 		if ( lexer.token != Symbol.RIGHTPAR ) signalError.show(") expected");
 
 		lexer.nextToken();
@@ -203,6 +237,10 @@ public class Compiler {
 
 		lexer.nextToken();
 		statementList();
+		
+		//TODO: ER-SEM01.KRA
+		//checar se há 'return'
+		
 		if ( lexer.token != Symbol.RIGHTCURBRACKET ) signalError.show("} expected");
 
 		lexer.nextToken();
@@ -213,8 +251,16 @@ public class Compiler {
 		// LocalDec ::= Type IdList ";"
 
 		Type type = type();
+		
+		//TODO: ER-SEM18.KRA, ER-SEM19.KRA
+		//verificar o tipo da variável declarada. int k; k i;... k não é um tipo
+		
 		if ( lexer.token != Symbol.IDENT ) signalError.show("Identifier expected");
 		Variable v = new Variable(lexer.getStringValue(), type);
+		
+		//TODO: ER-SEM03.KRA, ER-SEM28.KRA
+		//verificar se a variável ainda não foi declarada... int i; int i;
+		
 		lexer.nextToken();
 		while (lexer.token == Symbol.COMMA) {
 			lexer.nextToken();
@@ -301,8 +347,12 @@ public class Compiler {
 
 		switch (lexer.token) {
 		case THIS:
-		case IDENT:
+		case IDENT:	
 		case SUPER:
+			
+			//TODO: ER-SEM34.KRA
+			//chamada de método com valor de retorno não pode "retornar para o nada"...
+		
 		case INT:
 		case BOOLEAN:
 		case STRING:
@@ -324,6 +374,10 @@ public class Compiler {
 			ifStatement();
 			break;
 		case BREAK:
+			
+			//TODO: ER-SEM26.KRA
+			//break; só pode existir dentro de While
+			
 			breakStatement();
 			break;
 		case WHILE:
@@ -366,6 +420,10 @@ public class Compiler {
 			 */
 			localDec();
 		}
+		
+		//TODO: ER-SEM02.KRA
+		//int i; I = 0;	variável I não foi declarada
+		
 		else {
 			/*
 			 * AssignExprLocalDec ::= Expression [ ``$=$'' Expression ]
@@ -374,6 +432,19 @@ public class Compiler {
 			if ( lexer.token == Symbol.ASSIGN ) {
 				lexer.nextToken();
 				expr();
+				
+				//TODO: ER-SEM04.KRA, ER-SEM05.KRA, ER-SEM38.KRA
+				//verificar se o lado direito do simbolo '=' é um subtipo do lado esquerdo (o contrário não vale)
+				
+				//TODO: ER-SEM36.KRA
+				//O lado direito do símbolo '=' tem que ter pelo menos uma expressão e não pode ser um método void
+				
+				//TODO: ER-SEM41.KRA, ER-SEM42.KRA
+				//O lado direito da expressão não pode ser um tipo básico quando o lado esquerdo for do tipo de uma Classe, e vice-versa
+				
+				//TODO: ER-SEM43.KRA
+				//não pode fazer um tipo básico = null... int i = null;
+				
 				if ( lexer.token != Symbol.SEMICOLON )
 					signalError.show("';' expected", true);
 				else
@@ -400,6 +471,10 @@ public class Compiler {
 		if ( lexer.token != Symbol.LEFTPAR ) signalError.show("( expected");
 		lexer.nextToken();
 		expr();
+		
+		//TODO: ER-SEM11.KRA
+		//Verificar se o tipo da expressão resulta em booleano
+		
 		if ( lexer.token != Symbol.RIGHTPAR ) signalError.show(") expected");
 		lexer.nextToken();
 		statement();
@@ -421,9 +496,16 @@ public class Compiler {
 	}
 
 	private void returnStatement() {
-
+		
+		//TODO: ER-SEM35.KRA
+		//métodos void não podem retornar nada
+		
 		lexer.nextToken();
 		expr();
+		
+		//TODO: ER-SEM39.KRA
+		//A expressão retornada deve ser um subtipo do tipo do método (ou de preferência o mesmo tipo né)
+		
 		if ( lexer.token != Symbol.SEMICOLON )
 			signalError.show(SignalError.semicolon_expected);
 		lexer.nextToken();
@@ -443,6 +525,13 @@ public class Compiler {
 				signalError.show(SignalError.ident_expected);
 
 			String name = lexer.getStringValue();
+			
+			//TODO: ER-SEM13.KRA
+			//comando read não aceita variáveis booleanas como argumento
+			
+			//TODO: ER-SEM44.KRA
+			//comando read só pode aceitar argumentos do tipo String ou int
+			
 			lexer.nextToken();
 			if ( lexer.token == Symbol.COMMA )
 				lexer.nextToken();
@@ -463,6 +552,13 @@ public class Compiler {
 		if ( lexer.token != Symbol.LEFTPAR ) signalError.show("( expected");
 		lexer.nextToken();
 		exprList();
+		
+		//TODO: ER-SEM14.KRA
+		//comando write não aceita expressões booleanas como argumento
+		
+		//TODO: ER-SEM44.KRA
+		//comando write não aceita objetos como argumento
+		
 		if ( lexer.token != Symbol.RIGHTPAR ) signalError.show(") expected");
 		lexer.nextToken();
 		if ( lexer.token != Symbol.SEMICOLON )
@@ -484,6 +580,10 @@ public class Compiler {
 	}
 
 	private void breakStatement() {
+		
+		//TODO: ER-SEM50.KRA
+		//break; só pode existir dentro de Whiles
+		
 		lexer.nextToken();
 		if ( lexer.token != Symbol.SEMICOLON )
 			signalError.show(SignalError.semicolon_expected);
@@ -514,6 +614,10 @@ public class Compiler {
 				|| op == Symbol.LT || op == Symbol.GE || op == Symbol.GT ) {
 			lexer.nextToken();
 			Expr right = simpleExpr();
+			
+			//TODO: ER-SEM57.KRA, ER-SEM58.KRA
+			//tipos diferentes não podem ser comparados com '==' nem '!=', nesses casos vai sempre retornar falso
+			
 			left = new CompositeExpr(left, op, right);
 		}
 		return left;
@@ -527,6 +631,10 @@ public class Compiler {
 				|| op == Symbol.OR) {
 			lexer.nextToken();
 			Expr right = term();
+			
+			//TODO: ER-SEM08.KRA, ER-SEM12.KRA
+			//verificar o tipo dos dois lados da da soma pra saber se os tipos são compatíveis... (true + false) tá errado
+			
 			left = new CompositeExpr(left, op, right);
 		}
 		return left;
@@ -540,6 +648,10 @@ public class Compiler {
 				|| op == Symbol.AND) {
 			lexer.nextToken();
 			Expr right = signalFactor();
+			
+			//TODO: ER-SEM09.KRA
+			//Verificar os tipos dos dois lados... int não suporta o operador &&
+			
 			left = new CompositeExpr(left, op, right);
 		}
 		return left;
@@ -549,6 +661,10 @@ public class Compiler {
 		Symbol op;
 		if ( (op = lexer.token) == Symbol.PLUS || op == Symbol.MINUS ) {
 			lexer.nextToken();
+			
+			//TODO: ER-SEM16.KRA
+			//Operadores + e - não aceitam expressões booleanas... boolean b = false; write(-b);
+			
 			return new SignalExpr(op, factor());
 		}
 		else
@@ -611,6 +727,10 @@ public class Compiler {
 		case NOT:
 			lexer.nextToken();
 			e = expr();
+			
+			//TODO: ER-SEM15.KRA
+			//verificar se a expr é do tipo booleano
+			
 			return new UnaryExpr(e, Symbol.NOT);
 			// ObjectCreation ::= "new" Id "(" ")"
 		case NEW:
@@ -656,6 +776,16 @@ public class Compiler {
 			if ( lexer.token != Symbol.IDENT )
 				signalError.show("Identifier expected");
 			messageName = lexer.getStringValue();
+			
+			//TODO: ER-SEM46.KRA
+			//verificar se essa classe tem mesmo uma superclasse
+			
+			//TODO: ER-SEM47.KRA
+			//Verificar se a superclasse tem mesmo esse método, ou se suas superclasses têm (fazer a busca pelo método na árvore de hierarquia)
+			
+			//TODO: ER-SEM59.KRA
+			//Verificar se na superclasse o método é publico
+			
 			/*
 			 * para fazer as conferências semânticas, procure por 'messageName'
 			 * na superclasse/superclasse da superclasse etc
@@ -679,6 +809,13 @@ public class Compiler {
 				// retorne um objeto da ASA que representa um identificador
 				return null;
 			}
+			
+			//TODO: ER-SEM07.KRA
+			//verificar se o tipo da variável aceita uma chamada de método... int i; i.run();
+			
+			//TODO: ER-SEM62.KRA
+			//essa não pode ser uma variável de instância... variáveis de instância só podem ser usadas com o this.
+			
 			else { // Id "."
 				lexer.nextToken(); // coma o "."
 				if ( lexer.token != Symbol.IDENT ) {
@@ -688,6 +825,13 @@ public class Compiler {
 					// Id "." Id
 					lexer.nextToken();
 					ident = lexer.getStringValue();
+					
+					//TODO: ER-SEM37.KRA, ER-SEM61.KRA
+					//Verificar se o método foi declarado na classe, ou em uma de suas superclasses
+					
+					//TODO: ER-SEM59.KRA
+					//Verificar se o método é publico
+					
 					if ( lexer.token == Symbol.DOT ) {
 						// Id "." Id "." Id "(" [ ExpressionList ] ")"
 						/*
@@ -707,7 +851,12 @@ public class Compiler {
 					}
 					else if ( lexer.token == Symbol.LEFTPAR ) {
 						// Id "." Id "(" [ ExpressionList ] ")"
+						
 						exprList = this.realParameters();
+						
+						//TODO: ER-SEM40.KRA
+						//Verificar se o tipo do parâmetro enviado é subtipo do parâmetro na declaração do método
+						
 						/*
 						 * para fazer as conferências semânticas, procure por
 						 * método 'ident' na classe de 'firstId'
@@ -740,6 +889,7 @@ public class Compiler {
 				if ( lexer.token != Symbol.IDENT )
 					signalError.show("Identifier expected");
 				ident = lexer.getStringValue();
+				
 				lexer.nextToken();
 				// já analisou "this" "." Id
 				if ( lexer.token == Symbol.LEFTPAR ) {
@@ -750,6 +900,11 @@ public class Compiler {
 					 */
 					exprList = this.realParameters();
 				}
+				
+				
+				//TODO: ER-SEM68.KRA
+				//Verificar se o método existe nessa classe
+				
 				else if ( lexer.token == Symbol.DOT ) {
 					// "this" "." Id "." Id "(" [ ExpressionList ] ")"
 					lexer.nextToken();
@@ -764,6 +919,10 @@ public class Compiler {
 					 * confira se a classe corrente realmente possui uma
 					 * variável de instância 'ident'
 					 */
+					
+					//TODO: 
+					//Verificar se esse atributo existe nessa classe
+					
 					return null;
 				}
 			}
