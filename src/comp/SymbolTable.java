@@ -9,6 +9,7 @@ public class SymbolTable {
     public SymbolTable() {
         globalTable = new HashMap<String, KraClass>();
         localTable  = new HashMap<String, Variable>();
+        instanceTable  = new HashMap<String, InstanceVariable>();
     }
 
     public Object putInGlobal( String key, KraClass value ) {
@@ -25,6 +26,14 @@ public class SymbolTable {
 
     public Variable getInLocal( String key ) {
        return localTable.get(key);
+    }
+
+    public InstanceVariable putInInstance( String key, InstanceVariable value ) {
+        return instanceTable.put(key, value);
+    }
+
+    public InstanceVariable getInInstance( String key ) {
+        return instanceTable.get(key);
     }
 
     public Object get( String key ) {
@@ -45,7 +54,13 @@ public class SymbolTable {
          localTable.clear();
     }
 
+    public void removeInstanceIdent() {
+        // remove all local identifiers from the table
+        instanceTable.clear();
+    }
+
 
     private HashMap<String, KraClass> globalTable;
     private HashMap<String, Variable> localTable;
+    private HashMap<String, InstanceVariable> instanceTable;
 }

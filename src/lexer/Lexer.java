@@ -49,6 +49,7 @@ public class Lexer {
 		keywordsTable.put( "this", Symbol.THIS );
 		keywordsTable.put( "new", Symbol.NEW );
 		keywordsTable.put( "public", Symbol.PUBLIC );
+        keywordsTable.put( "static", Symbol.STATIC );
 		keywordsTable.put( "private", Symbol.PRIVATE );
 		keywordsTable.put( "String", Symbol.STRING );
 		keywordsTable.put( "extends", Symbol.EXTENDS );
@@ -88,10 +89,9 @@ public class Lexer {
                    lineNumber++;
                 tokenPos++;
              }
-             if ( ch == '\0' )
-                error.show( "Comment opened and not closed",
-                      getLine(posStartComment), lineNumberStartComment);
-             else
+             if ( ch == '\0' ) {
+                 error.show("Comment opened and not closed", getLine(posStartComment), lineNumberStartComment);
+             }else
                 tokenPos += 2;
              nextToken();
           }

@@ -5,13 +5,21 @@ import java.util.*;
 public class ExprList {
 
     public ExprList() {
-        exprList = new ArrayList<Expr>();
+        this.exprList = new ArrayList<Expr>();
     }
 
     public void addElement( Expr expr ) {
-        exprList.add(expr);
+        this.exprList.add(expr);
     }
 
+    public TypeList getTypeList(){
+        TypeList typeList = new TypeList();
+        for (Expr expr: this.exprList){
+            typeList.addElement(expr.getType());
+        }
+        return typeList;
+    }
+        
     public void genC( PW pw ) {
 
         int size = exprList.size();

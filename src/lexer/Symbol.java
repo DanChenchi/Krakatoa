@@ -39,6 +39,7 @@ public enum Symbol {
     PLUS("+"),
     PRIVATE("private"),
     PUBLIC("public"),
+    STATIC("static"),
     READ("read"),
     RETURN("return"),
     RIGHTCURBRACKET("}"),
