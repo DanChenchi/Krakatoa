@@ -1,40 +1,24 @@
 package ast;
 
-public class WhileStatement extends Statement{
+/**
+ * Created by joao on 29/09/15.
+ */
+public class WhileStatement extends Statement {
 
-	
-	private Expr expression;
-	private Statement statement;
-	
-	public WhileStatement() {
-		this.setExpression(null);
-		this.setStatement(null);
-	}
-	
-	public WhileStatement(Expr expr, Statement statement){
-		this.setExpression(expr);
-		this.setStatement(statement);
-	}
-	
-	@Override
-	public void genC(PW pw) {
-		// TODO Auto-generated method stub
-	}
+    private Expr expr;
+    private Statement statement;
 
-	public Statement getStatement() {
-		return statement;
-	}
+    public WhileStatement(Expr expr, Statement statement){
+        this.expr = expr;
+        this.statement = statement;
+    }
 
-	public void setStatement(Statement statement) {
-		this.statement = statement;
-	}
+    public void genKra (PW pw){
 
-	public Expr getExpression() {
-		return expression;
-	}
+    }
 
-	public void setExpression(Expr expression) {
-		this.expression = expression;
-	}
+    @Override
+    public void genC(PW pw) {
 
+    }
 }

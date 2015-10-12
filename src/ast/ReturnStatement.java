@@ -1,32 +1,26 @@
 package ast;
 
-public class ReturnStatement extends Statement{
+/**
+ * Created by joao on 29/09/15.
+ */
+public class ReturnStatement extends Statement {
 
-	private Expr expression;
-	
-	public ReturnStatement() {
-		this.setExpression(null);
-	}
-	
-	public ReturnStatement(Expr expression){
-		this.setExpression(expression);
-	}
-	
-	public Type getReturnType(){
-		return this.expression.getType();
-	}
-	
-	@Override
-	public void genC(PW pw) {
-		// TODO Auto-generated method stub
-		
-	}
+    private Expr expr;
 
-	public Expr getExpression() {
-		return expression;
-	}
-	public void setExpression(Expr expression) {
-		this.expression = expression;
-	}
+    public ReturnStatement(Expr expr){
+        this.expr = expr;
+    }
 
+    public Type getReturnType(){
+        return expr.getType();
+    }
+
+    public void genKra(PW pw){
+
+    }
+
+    @Override
+    public void genC(PW pw) {
+
+    }
 }

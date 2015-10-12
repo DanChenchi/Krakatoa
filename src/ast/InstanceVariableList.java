@@ -4,12 +4,31 @@ import java.util.*;
 
 public class InstanceVariableList {
 
+    private ArrayList<InstanceVariable> instanceVariableList;
+
+    public Type searchStaticInstance(String identifier){
+        for (InstanceVariable instanceVariable: instanceVariableList){
+            if (instanceVariable.getName().equals(identifier) && instanceVariable.isStatic()){
+                return instanceVariable.getType();
+            }
+        }
+        return null;
+    }
+
     public InstanceVariableList() {
        instanceVariableList = new ArrayList<InstanceVariable>();
     }
 
+    public InstanceVariableList(ArrayList<InstanceVariable> instanceVariableList) {
+        this.instanceVariableList = instanceVariableList;
+    }
+
     public void addElement(InstanceVariable instanceVariable) {
-       instanceVariableList.add( instanceVariable );
+       instanceVariableList.add(instanceVariable);
+    }
+
+    public void addInstanceVariableList(InstanceVariableList instanceVariableList) {
+        this.instanceVariableList.addAll(instanceVariableList.getInstanceVariableList());
     }
 
     public Iterator<InstanceVariable> elements() {
@@ -20,15 +39,12 @@ public class InstanceVariableList {
         return instanceVariableList.size();
     }
 
-    public Variable searchVariable(Variable variable){
-    	for(Variable v: instanceVariableList){
-    		if(v.equals(variable))
-    			return v;
-    	}
-    	return null;
-    		
+    public ArrayList<InstanceVariable> getInstanceVariableList() {
+        return instanceVariableList;
     }
-    
-    private ArrayList<InstanceVariable> instanceVariableList;
 
+	public void genKra(PW pw) {
+		for (InstanceVariable instanceVariable: instanceVariableList)
+			instanceVariable.genKra(pw);
+	}
 }

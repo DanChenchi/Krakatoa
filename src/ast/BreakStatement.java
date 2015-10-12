@@ -1,11 +1,21 @@
 package ast;
 
-public class BreakStatement extends Statement{
+/**
+ * Created by joao on 29/09/15.
+ */
+public class BreakStatement extends Statement {
 
-	@Override
-	public void genC(PW pw) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+    public BreakStatement(){
+
+    }
+
+
+    public void genKra(PW pw){
+
+    }
+
+    @Override
+    public void genC(PW pw) {
+
+    }
 }

@@ -1,28 +1,43 @@
 package ast;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class StatementList {
-	private ArrayList<Statement> statementList;
-	
-	public StatementList(){
-		this.setStatementList(new ArrayList<Statement>());
-	}
-	
-	public StatementList(ArrayList<Statement> list){
-		this.setStatementList(list);
-	}
-	
-	public void addStatement(Statement statement){
-		this.statementList.add(statement);
-	}
 
-	public ArrayList<Statement> getStatementList() {
-		return statementList;
+    public StatementList() {
+        statementList = new ArrayList<Statement>();
+    }
+
+    public StatementList(ArrayList<Statement> statementList) {
+        this.statementList = statementList;
+    }
+
+    public void addElement(Statement statement) {
+        statementList.add(statement);
+    }
+
+    public void addList(StatementList statementList){
+        this.statementList.addAll(statementList.getStatementList());
+    }
+
+    public Iterator<Statement> elements() {
+        return this.statementList.iterator();
+    }
+
+    public int getSize() {
+        return statementList.size();
+    }
+
+    public ArrayList<Statement> getStatementList() {
+        return statementList;
+    }
+
+    private ArrayList<Statement> statementList;
+
+	public void genKra(PW pw) {
+		for (Statement statement : statementList) {
+			statement.genKra(pw);
+		}
 	}
-	public void setStatementList(ArrayList<Statement> statementList) {
-		this.statementList = statementList;
-	}
-	
-	
 }

@@ -7,7 +7,11 @@ public class PrivateMethod extends Method{
 
 	
 	public PrivateMethod(String name, ParamList parameters, Type returnType, boolean isStatic, boolean isFinal){
-		super(name, parameters, returnType, isStatic, isFinal);
+		super(returnType, name, isStatic, isFinal, parameters);
 		this.qualifier = Symbol.PRIVATE;
+	}
+	
+	public void genKra(PW pw){
+		super.genKra(pw, "private");
 	}
 }

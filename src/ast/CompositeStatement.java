@@ -1,29 +1,29 @@
 package ast;
 
-public class CompositeStatement extends Statement{
-	private StatementList statementList;
+public class CompositeStatement extends Statement {
 
-	
-	public CompositeStatement(){
-		this.statementList = new StatementList();
-	}
-	
-	public CompositeStatement(StatementList list) {
-		this.statementList = list;
-	}
-	
-	public StatementList getStatementList() {
-		return statementList;
-	}
+    private StatementList statementList;
 
-	public void setStatementList(StatementList statementList) {
-		this.statementList = statementList;
-	}
+    public CompositeStatement(StatementList statementList){
+        this.statementList = statementList;
+    }
 
-	@Override
-	public void genC(PW pw) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+    @Override
+    public void genKra(PW pw){
+/*
+ * {
+ * 		statementList
+ * }
+ */
+    	pw.println(" {");
+    	pw.add();
+    	statementList.genKra(pw);
+    	pw.sub();
+    	pw.printlnIdent("}");
+    }
+
+    @Override
+    public void genC(PW pw) {
+
+    }
 }

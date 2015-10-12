@@ -5,8 +5,7 @@ import comp.CompilationError;
 
 public class Program {
 
-	public Program(ArrayList<KraClass> classList, ArrayList<MetaobjectCall> metaobjectCallList, 
-			       ArrayList<CompilationError> compilationErrorList) {
+	public Program(ArrayList<KraClass> classList, ArrayList<MetaobjectCall> metaobjectCallList, ArrayList<CompilationError> compilationErrorList) {
 		this.classList = classList;
 		this.metaobjectCallList = metaobjectCallList;
 		this.compilationErrorList = compilationErrorList;
@@ -14,6 +13,8 @@ public class Program {
 
 
 	public void genKra(PW pw) {
+		for(KraClass c: classList)
+			c.genKra(pw);
 	}
 
 	public void genC(PW pw) {

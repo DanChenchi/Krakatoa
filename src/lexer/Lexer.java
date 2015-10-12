@@ -58,6 +58,23 @@ public class Lexer {
 
 
 
+    public Symbol viewNextToken(){
+        int lastTokenPos = this.lastTokenPos, beforeLastTokenPos = this.beforeLastTokenPos, tokenPos = this.tokenPos;
+        String stringValue = this.stringValue, literalStringValue = this.literalStringValue;
+        int numberValue = this.numberValue, lineNumber = this.lineNumber;
+        Symbol token = this.token, returnToken;
+        nextToken();
+        returnToken = this.token;
+        this.lastTokenPos = lastTokenPos;
+        this.beforeLastTokenPos = beforeLastTokenPos;
+        this.tokenPos = tokenPos;
+        this.token = token;
+        this.stringValue = stringValue;
+        this.literalStringValue = literalStringValue;
+        this.numberValue = numberValue;
+        this.lineNumber = lineNumber;
+        return returnToken;
+    }
 
     public void nextToken() {
         char ch;
@@ -90,7 +107,7 @@ public class Lexer {
                 tokenPos++;
              }
              if ( ch == '\0' ) {
-                 error.show("Comment opened and not closed", getLine(posStartComment), lineNumberStartComment);
+                 error.show("Comment started in line " + lineNumberStartComment + " was not closed", getLine(posStartComment), lineNumberStartComment);
              }else
                 tokenPos += 2;
              nextToken();
@@ -124,7 +141,7 @@ public class Lexer {
                 try {
                    numberValue = Integer.valueOf(number.toString()).intValue();
                 } catch ( NumberFormatException e ) {
-                   error.show("Number out of limits");
+                   error.show("literal int out of limits");
                 }
                 if ( numberValue > MaxValueInteger )
                    error.show("Number out of limits");
@@ -224,7 +241,7 @@ public class Lexer {
                     	token = Symbol.MOCall;
                     	break;
                     case '_' :
-                      error.show("'_' cannot start an indentifier");
+                      error.show("Identifier starting with underscore");
                       break;
                     case '"' :
                        StringBuffer s = new StringBuffer();
@@ -260,7 +277,7 @@ public class Lexer {
                        token = Symbol.LITERALSTRING;
                        break;
                     default :
-                      error.show("Invalid Character: '" + ch + "'", false);
+                      error.show("Unknown character '" + ch + "'", false);
                 }
             }
           }

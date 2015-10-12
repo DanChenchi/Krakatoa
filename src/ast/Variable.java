@@ -7,9 +7,7 @@ public class Variable {
         this.type = type;
     }
 
-    public String getName() {
-    	return name;
-	}
+    public String getName() { return name; }
 
     public Type getType() {
         return type;

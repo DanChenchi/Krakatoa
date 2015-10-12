@@ -22,4 +22,18 @@ public class LocalVariableList {
 
     private ArrayList<Variable> localList;
 
+	public void genKra(PW pw) {
+/*
+ * Type name;
+ * Type name;
+ * Type name;
+ */
+		for (Variable variable : localList) {
+			pw.printIdent(variable.getType().getName());
+			pw.print(" ");
+			pw.print(variable.getName());
+			pw.println(";");
+		}
+	}
+
 }

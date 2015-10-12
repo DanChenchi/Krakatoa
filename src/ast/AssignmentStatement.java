@@ -1,5 +1,8 @@
 package ast;
 
+/**
+ * Created by joao on 30/09/15.
+ */
 public class AssignmentStatement extends Statement {
 
     private Expr leftExpr, rightExpr;
