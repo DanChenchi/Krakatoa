@@ -26,6 +26,7 @@ public class MessageSendToSelf extends MessageSend {
         return exprList.getTypeNames();
     }
 
+    // this.id
     public MessageSendToSelf(KraClass currentClass, InstanceVariable instanceVariable){
         this.currentClass = currentClass;
         this.instanceVariableClass = null;
@@ -34,7 +35,8 @@ public class MessageSendToSelf extends MessageSend {
         this.exprList = new ExprList();
         this.method = null;
     }
-
+    
+    //this.message( exprList )
     public MessageSendToSelf(KraClass currentClass, String messageName, ExprList exprList){
         this.currentClass = currentClass;
         this.instanceVariableClass = null;
@@ -48,6 +50,7 @@ public class MessageSendToSelf extends MessageSend {
         this.method = null;
     }
 
+    //this.id.message( exprList )
     public MessageSendToSelf(KraClass currentClass, InstanceVariable instanceVariable, String messageName, ExprList exprList, KraClass instanceVariableClass){
         this.currentClass = currentClass;
         this.instanceVariableClass = instanceVariableClass;
@@ -91,12 +94,36 @@ public class MessageSendToSelf extends MessageSend {
             return this.instanceVariable.getType();
     }
 
-    private void genKra(PW pw){
-
-    }
-    
     public void genC( PW pw, boolean putParenthesis ) {
     }
+
+    
+/*
+ * 
+ * this.id
+ * this.message( exprList )
+ * this.id.message( exprList )
+ * 
+ */
+	@Override
+	public void genKra(PW pw, boolean putParenthesis) {
+		if(putParenthesis)
+			pw.print("(");
+		
+		pw.print("this");
+    	if(this.instanceVariable != null)
+    		pw.print("." + this.instanceVariable.getName());
+		
+    	if(this.messageName != null){
+			pw.print("."+this.messageName);
+	    	pw.print("(");
+	    	this.exprList.genKra(pw);
+	    	pw.print(")");
+    	}
+    	
+    	if(putParenthesis)
+    		pw.print(")");
+	}
     
     
 }

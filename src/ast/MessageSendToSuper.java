@@ -38,5 +38,26 @@ public class MessageSendToSuper extends MessageSend {
     public void genC( PW pw, boolean putParenthesis ) {
         
     }
+
+/*
+ * 
+ * super.message( exprList )
+ * 
+ */
+	@Override
+	public void genKra(PW pw, boolean putParenthesis) {
+		if(putParenthesis)
+			pw.print("(");
+		
+		pw.print("super.");
+    	pw.print(this.name);
+    	pw.print("(");
+    	this.exprList.genKra(pw);
+    	pw.print(")");
+    	
+    	if(putParenthesis)
+    		pw.print(")");
+		
+	}
     
 }

@@ -17,4 +17,11 @@ public class ParenthesisExpr extends Expr {
     }
     
     private Expr expr;
+
+	@Override
+	public void genKra(PW pw, boolean putParenthesis) {
+		pw.print("(");
+        expr.genKra(pw, false);
+        pw.printIdent(")");
+	}
 }

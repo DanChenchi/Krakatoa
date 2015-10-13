@@ -11,6 +11,19 @@ public class MessageSendStatement extends Statement {
 
    private MessageSend  messageSend;
 
+   
+/*
+* 
+* messageSend;
+* 
+*/
+	@Override
+	public void genKra(PW pw) {
+		pw.printIdent("");
+		this.messageSend.genKra(pw, false);
+		pw.println(";");
+	}
+
 }
 
 

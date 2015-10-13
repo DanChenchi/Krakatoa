@@ -1,8 +1,5 @@
 package ast;
 
-/**
- * Created by joao on 29/09/15.
- */
 public class WriteLnStatement extends Statement {
 
     private ExprList exprList;
@@ -11,8 +8,11 @@ public class WriteLnStatement extends Statement {
         this.exprList = exprList;
     }
 
+    @Override
     public void genKra(PW pw){
-
+    	pw.printIdent("writeln( ");
+    	this.exprList.genKra(pw);
+    	pw.println(" );");
     }
 
     @Override

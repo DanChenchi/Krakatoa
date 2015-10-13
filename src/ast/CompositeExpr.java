@@ -3,7 +3,6 @@ package ast;
 import lexer.*;
 import java.util.HashMap;
 
-
 public class CompositeExpr extends Expr {
 
     public CompositeExpr( Expr pleft, Symbol poper, Expr pright ) {
@@ -13,19 +12,34 @@ public class CompositeExpr extends Expr {
     }
     
     @Override
-	public void genC( PW pw, boolean putParenthesis ) {
-        if ( putParenthesis )
-          pw.print("(");
-        left.genC(pw, true);
+    public void genKra(PW pw, boolean putParenthesis) {
+    	if ( putParenthesis )
+    		pw.print("(");
+    	left.genKra(pw, false);
         String strSymbol = arrayOper.get(oper);
-        if ( strSymbol == null ) {
-        	pw.println("internal error in CompositeExpr::genC");
-        }
+        if ( strSymbol == null ) 
+        	pw.println("internal error in CompositeExpr::genKra");
         else
-            pw.print(" " + strSymbol + " ");
-        right.genC(pw, true);
+            pw.print(" "+ strSymbol + " ");
+        
+        right.genKra(pw, false);
         if ( putParenthesis )
-          pw.print(")");
+        	pw.print(")");
+    }
+    
+    @Override
+	public void genC( PW pw, boolean putParenthesis ) {
+		if ( putParenthesis )
+			pw.print("(");
+		left.genC(pw, true);
+		String strSymbol = arrayOper.get(oper);
+		if ( strSymbol == null ) 
+			pw.println("internal error in CompositeExpr::genC");
+		else
+		    pw.print(" " + strSymbol + " ");
+		right.genC(pw, true);
+		if ( putParenthesis )
+			pw.print(")");
     }
 
     @Override

@@ -90,6 +90,15 @@ public class ExprList{
         return true;
     }
 
+    public void genKra(PW pw){
+    	int size = exprList.size();
+        for ( Expr e : exprList ) {
+        	e.genKra(pw, false);
+            if ( --size > 0 )
+                pw.print(", ");
+        }
+    }
+    
     public void genC( PW pw ) {
 
         int size = exprList.size();

@@ -13,8 +13,37 @@ public class WhileStatement extends Statement {
         this.statement = statement;
     }
 
+/*
+ * while( expr )
+ * 		Statement
+ * 
+ * OBS: caso o statement seja um CompositeStatement as chaves {} são colocadas da seguinte maneira:
+ * 
+ * while( expr ) {
+ * 		Statement
+ * 		Statement
+ * 		Statement
+ * }
+ * 
+ */
+    
+    @Override
     public void genKra (PW pw){
-
+    	pw.printIdent("while( ");
+    	this.expr.genKra(pw, false);
+    	
+    	if(this.statement instanceof CompositeStatement){
+    		pw.print(" ) ");
+    		this.statement.genKra(pw);
+    	}
+    	else{
+    		pw.println(" )");
+    		pw.add();
+    		if(this.statement != null)
+    			this.statement.genKra(pw);
+    		pw.sub();
+    	}
+    	
     }
 
     @Override

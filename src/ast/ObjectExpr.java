@@ -1,18 +1,13 @@
 package ast;
 
-/**
- * Created by joao on 29/09/15.
- */
 public class ObjectExpr extends Expr {
-
+	
     private KraClass kraClass;
-
-    public ObjectExpr (KraClass kraClass){
+    private boolean isNew;
+    
+    public ObjectExpr (KraClass kraClass, boolean isNew){
         this.kraClass = kraClass;
-    }
-
-    public void genKra(PW pw){
-
+        this.isNew = isNew;
     }
 
     @Override
@@ -24,4 +19,25 @@ public class ObjectExpr extends Expr {
     public Type getType() {
         return kraClass;
     }
+
+/*
+ * 
+ * new KraClass()
+ * 
+ */
+	@Override
+	public void genKra(PW pw, boolean putParenthesis) {
+		if(putParenthesis)
+			pw.print("(");
+		
+		if(this.isNew){
+			pw.print("new ");
+			pw.print(this.kraClass.getName());
+			pw.print("()");
+		}
+		else
+			pw.print("this");
+		if(putParenthesis)
+			pw.print(")");
+	}
 }

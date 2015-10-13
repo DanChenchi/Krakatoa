@@ -36,8 +36,11 @@ public class StatementList {
     private ArrayList<Statement> statementList;
 
 	public void genKra(PW pw) {
-		for (Statement statement : statementList) {
-			statement.genKra(pw);
+		if(!statementList.isEmpty()){
+			for (Statement statement : statementList) {
+				if (statement != null)
+					statement.genKra(pw);
+			}
 		}
 	}
 }

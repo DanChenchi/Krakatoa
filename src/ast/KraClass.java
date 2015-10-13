@@ -205,12 +205,18 @@ public class KraClass extends Type {
 	   
 	   pw.print("class ");
 	   pw.print(this.getName());
+	   
+	   if(this.superClass != null)
+		   pw.print(" extends " + this.superClass.getName());
+	   
 	   pw.println(" {");
+	   pw.println("");
 	   pw.add();
 	   this.instanceVariableList.genKra(pw);
 	   this.privateMethodList.genKra(pw);
 	   this.publicMethodList.genKra(pw);
 	   pw.sub();
+	   pw.println("");
 	   pw.println("}");
 	   pw.println("");
    }

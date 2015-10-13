@@ -1,10 +1,5 @@
 package ast;
 
-import java.util.ArrayList;
-
-/**
- * Created by joao on 30/09/15.
- */
 public class DeclarationStatement extends Statement {
 
     private VariableList variableList;
@@ -15,12 +10,17 @@ public class DeclarationStatement extends Statement {
         this.type = type;
     }
 
-    public void genKra(){
-
-    }
-
     @Override
     public void genC(PW pw) {
 
     }
+
+	@Override
+	public void genKra(PW pw) {
+		pw.printIdent(this.type.getName());
+		pw.print(" ");
+		this.variableList.genKra(pw);
+		pw.println(";");
+		
+	}
 }

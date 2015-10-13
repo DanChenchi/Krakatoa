@@ -18,4 +18,15 @@ public class LiteralInt extends Expr {
     }
     
     private int value;
+
+	@Override
+	public void genKra(PW pw, boolean putParenthesis) {
+		if(putParenthesis)
+			pw.print("(");
+		
+		pw.print("" + this.value);
+		
+		if(putParenthesis)
+			pw.print(")");
+	}
 }

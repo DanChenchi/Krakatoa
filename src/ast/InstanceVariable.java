@@ -36,6 +36,7 @@ public class InstanceVariable extends Variable {
 			pw.print("final ");
 		if(this.isStatic)
 			pw.print("static ");
+		pw.print("private ");
 		pw.print(this.getType().getName());
 		pw.print(" ");
 		pw.print(this.getName());

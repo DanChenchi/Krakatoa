@@ -129,11 +129,45 @@ public class MessageSendToVariable extends MessageSend {
         }
     }
 
-    public void genKra(){}
-    
     public void genC( PW pw, boolean putParenthesis ) {
         
     }
+
+    
+/*
+ * id.id
+ * id.message( exprList )
+ * id.id.message( exprList )
+ * 
+ */
+	@Override
+	public void genKra(PW pw, boolean putParenthesis) {
+		//id.
+		pw.print(this.firstId);
+		pw.print(".");
+		
+		//id.message( exprList )
+		if(this.identifier == null){
+			pw.print(this.messageName);
+			pw.print("(");
+			exprList.genKra(pw);
+			pw.print(")");
+			return;
+		}
+		
+		//id.id
+		pw.print(this.identifier);
+		
+		//id.id.message( exprList )
+		if(this.messageName != null){
+			pw.print(".");
+			pw.print(messageName);
+			pw.print("(");
+			this.exprList.genKra(pw);
+			pw.print(")");
+		}
+			
+	}
 
     
 }    

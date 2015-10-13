@@ -11,6 +11,14 @@ public class PrivateMethod extends Method{
 		this.qualifier = Symbol.PRIVATE;
 	}
 	
+	public Symbol getQualifier() {
+		return qualifier;
+	}
+
+	public void setQualifier(Symbol qualifier) {
+		this.qualifier = qualifier;
+	}
+	
 	public void genKra(PW pw){
 		super.genKra(pw, "private");
 	}

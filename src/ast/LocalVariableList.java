@@ -34,6 +34,7 @@ public class LocalVariableList {
 			pw.print(variable.getName());
 			pw.println(";");
 		}
+		pw.println("");
 	}
 
 }

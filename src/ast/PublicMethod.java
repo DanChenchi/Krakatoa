@@ -10,7 +10,16 @@ public class PublicMethod extends Method{
 		this.qualifier = Symbol.PUBLIC;
 	}
 	
+	public Symbol getQualifier() {
+		return qualifier;
+	}
+
+	public void setQualifier(Symbol qualifier) {
+		this.qualifier = qualifier;
+	}
+	
 	public void genKra(PW pw){
 		super.genKra(pw, "public");
 	}
+
 }

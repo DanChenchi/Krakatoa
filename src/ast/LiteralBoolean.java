@@ -20,4 +20,18 @@ public class LiteralBoolean extends Expr {
     public static LiteralBoolean False = new LiteralBoolean(false);
 
     private boolean value;
+
+	@Override
+	public void genKra(PW pw, boolean putParenthesis) {
+		if(putParenthesis)
+			pw.print("(");
+		
+		if(this.value)
+			pw.print("true");
+		else
+			pw.print("false");
+		
+		if(putParenthesis)
+			pw.print(")");
+	}
 }

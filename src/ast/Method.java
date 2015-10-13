@@ -1,8 +1,5 @@
 package ast;
 
-/**
- * Created by joao on 29/09/15.
- */
 public class Method {
 
     private Type type;
@@ -93,7 +90,7 @@ public class Method {
 		pw.print(this.type.getName());
 		pw.print(" ");
 		pw.print(this.name);
-		pw.print("( ");
+		pw.print("(");
 		
 		if(this.paramList != null)
 			this.paramList.genKra(pw);

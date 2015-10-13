@@ -15,4 +15,12 @@ public class LiteralString extends Expr {
     }
     
     private String literalString;
+
+	@Override
+	public void genKra(PW pw, boolean putParenthesis) {
+		if(this.literalString.equals(""))
+			pw.print("\"\"");
+		else
+			pw.print("\""+  this.literalString +"\"");
+	}
 }

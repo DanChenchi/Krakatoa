@@ -51,12 +51,14 @@ public class ParamList {
 /*
  * Type name, Type name, Type name		
  */
-		for (Variable variable : this.paramList) {
+		
+		for (Iterator<Variable> iterator = paramList.iterator(); iterator.hasNext();) {
+			Variable variable = (Variable) iterator.next();
 			pw.print(variable.getType().getName());
-			if(paramList.iterator().hasNext())
+			pw.print(" ");
+			pw.print(variable.getName());
+			if(iterator.hasNext())
 				pw.print(", ");
 		}
-		
-		
 	}
 }

@@ -928,7 +928,7 @@ public class Compiler {
 			lexer.nextToken();
 			if ( lexer.token != Symbol.RIGHTPAR ) signalError.show("')' expected in 'new' statement");
 			lexer.nextToken();
-			return new ObjectExpr(kraClass);
+			return new ObjectExpr(kraClass, true);
 
 // 		PrimaryExpr ::= "super" "." Id "(" [ ExpressionList ] ")"
 		case SUPER:
@@ -1052,7 +1052,7 @@ public class Compiler {
 				if (currentMethod.isStatic()){
 					signalError.show("Call to 'this' in a static method");
 				}
-				return new ObjectExpr(symbolTable.getInGlobal(currentClass));
+				return new ObjectExpr(symbolTable.getInGlobal(currentClass), false);
 			}
 			else {
 				lexer.nextToken();
