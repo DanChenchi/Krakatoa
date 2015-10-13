@@ -61,11 +61,11 @@ public class IfStatement extends Statement {
 		this.expr.genKra(pw, false);
 				
 		if(this.ifStatement instanceof CompositeStatement){
-			pw.print(") ");
+			pw.print(" ) ");
 			this.ifStatement.genKra(pw);
 		}
 		else{
-			pw.println(")");
+			pw.println(" )");
 			pw.add();
 			if(this.ifStatement != null)
 				this.ifStatement.genKra(pw);
